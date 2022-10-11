@@ -3,3 +3,4 @@
 /WhyApp/config.json
 *ipynb
 /venv/
+/WhyApp/*.db
