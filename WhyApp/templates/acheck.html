@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+{% extends "base.html" %}
+{% block js %}
+    <script>
+    var response = {'q1':[]}
+    function acheck(){
+        if ($("input:checked").each(function(){return this.id}).get().length !== 0 && $("#jarinfo").val() !== ''){
+            $('#cont_butt').removeClass("disabled")
+        }
+    }
+
+
+
+    function submitData(){
+        //var draw = $("input:checked").each(function(){return this.id}).get()
+        response['subject_id'] =  new URLSearchParams(window.location.search).get('PID')
+        //response['q1'] = String($("input:checked").each(function(){return this.id}).get())
+        response['q2'] = $("#jarinfo").val()
+        $.ajax({
+                 type: "POST",
+                 url:window.location.pathname,
+                 data: JSON.stringify(response),
+                 traditional: true,
+                 contentType: "application/json; charset=utf-8",
+                 dataType: "json",
+                 success: function(){window.location.pathname = '/debrief'; console.log('data sent from client')}
+        })
+    }
+
+    </script>
+{% endblock %}
+
+{% block stage %}
+    <div class="row">
+        <div class="col">
+            <p class="text-center" style="font-size: xx-large;">Please answer the following questions to ensure comprehension. </p>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <p class="text-center" style="font-size: x-large;">Select the draws necessary to win. </p>
+        </div>
+        <div class="col">
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="check1" oninput="acheck();response['q1'].push(this.id)">
+                <label class="form-check-label" for="flexCheckDefault">Blue ball from jar A</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="check2" oninput="acheck(); response['q1'].push(this.id)">
+                <label class="form-check-label" for="flexCheckChecked">Red ball from jar A</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="check3" oninput="acheck();response['q1'].push(this.id)">
+                <label class="form-check-label" for="flexCheckChecked">Red ball from jar B</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="check4" oninput="acheck();response['q1'].push(this.id)">
+                <label class="form-check-label" for="flexCheckChecked">Blue ball from jar B</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="check5" oninput="acheck();response['q1'].push(this.id)">
+                <label class="form-check-label" for="flexCheckChecked">Red ball from jar C</label>
+            </div>
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" value="" id="check6" oninput="acheck();response['q1'].push(this.id)">
+                <label class="form-check-label" for="flexCheckChecked">Blue ball from jar C</label>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <p class="text-center" style="font-size: x-large;">What information was shown about each jar?</p>
+        </div>
+        <div class="col"><input id="jarinfo" style="width: 35vw;" oninput="acheck()"></div>
+    </div>
+    <div class="row justify-content-center">
+            <div class="col-sm-2">
+                <a href="#" type="button" id="cont_butt" class="btn btn-primary btn-lg disabled" style="font-size: large;" onclick="submitData()">Continue</a>
+            </div>
+    </div>
+
+{% endblock %}
+</html>

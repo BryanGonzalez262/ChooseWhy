@@ -1,0 +1,19 @@
+.container-fluid{
+    height: 100vh;
+    width: 100vw;
+    background-color: rgb(1, 45, 59);
+    font-family: "Segoe UI", sans-serif;
+    font-weight: lighter;
+    align-items: center;
+    display: inline-block;
+    color: #ffffff;
+}
+
+label.btn.btn-outline-primary{
+    width: inherit;
+    font-size: calc(.6rem + .6vw);
+}
+
+.form-check-label{
+    font-size: x-large;
+}

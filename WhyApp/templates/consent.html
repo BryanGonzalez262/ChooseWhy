@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+{% extends "base.html" %}
+
+
+{% block stage %}
+    <div class="row justify-content-center align-self-center">
+        <div class="col">
+            <p class="text-center" style="font-size: xxx-large;">We need your consent to proceed</p>
+        </div>
+    </div>
+    <div class="row justify-content-center">
+        <div class="col">
+            <div class="legal well" style="background-color: white; color: black;">
+                <p style="font-style:italic; font-weight: bold; font-size: 1em;">(Please consider this information carefully before deciding whether to participate in this research.)</p>
+                <div class="col" style="font-size: 1rem;">
+                    <p>The purpose of this research is to examine which factors influence social judgment and decision-making. You will be asked to make judgements about individuals and actions in social scenarios. We are simply interested in your judgement. The study will take less than 1 hour to complete, and you will receive less than $20 on Prolific. Your compensation and time commitment are specified in the study description.</p>
+                    <p>There are no anticipated risks associated with participating in this study. The effects of participating should be comparable to those you would ordinarily experience from viewing a computer monitor and using a mouse or keyboard for a similar amount of time. At the end of the study, we will provide an explanation of the questions that motivate this line of research and will describe the potential implications.</p>
+                    <p>Your participation in this study is completely voluntary and you may refuse to participate or you may choose to withdraw at any time without penalty or loss of benefits to you which are otherwise entitled. Your participation in this study will remain confidential. No personally identifiable information will be associated with your data. Also, all analyses of the data will be averaged across all the participants, so your individual responses will never be specifically analyzed.</p>
+
+                    <p>If you have questions or concerns about your participation or payment, or want to request a summary of research findings, please contact Dr. Jonathan Phillips at:</p>
+                    <p>Jonathan.S.Phillips@dartmouth.edu.</p>
+                    <p>Please save a copy of this form for your records.</p>
+
+
+                    <button type="button" class="btn btn-default btn-sm" onClick="window.print();">
+                    <span class="glyphicon glyphicon-print"></span> Print a copy of this
+                    </button>
+                </div>
+            </div>
+            <hr/>
+            <div class="row justify-content-center">
+                <h4 class="text-center">Agreement: The nature and purpose of this research have been sufficiently explained and I agree to participate in this study. I understand that I am free to withdraw at any time without incurring any penalty. Please consent by clicking the button below to continue. Otherwise, please exit the study at any time.</h4>
+                <br/>
+            </div>
+            <div class="row justify-content-center ">
+                    <div class="col-lg justify-content-center text-center">
+                        <button type="button" class="btn btn-primary btn-lg" id="consent-btn">I Consent</button>
+                    </div>
+                    <div class="col-lg justify-content-center text-center">
+                        <button type="button" class="btn btn-danger btn-lg" onclick='window.location.href = "https://app.prolific.co/"'>No Thanks</button>
+                    </div>
+            </div>
+
+        </div>
+    </div>
+    <script>
+        $('#consent-btn').click( function(e) {
+            $.ajax({
+                type: "POST",
+                url: window.location.pathname,
+                data: JSON.stringify({"subject_id":  new URLSearchParams(window.location.search).get('PID')}),
+                traditional: true,
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+                success: function (){window.location.pathname="/instructions"}
+            });
+    });
+    </script>
+{% endblock %}
+</html>

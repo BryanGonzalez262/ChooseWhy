@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+{% extends "base.html" %}
+
+
+{% block stage %}
+    <div class="row text-center" >
+        <h1 class="animated bounceInUp" style="font-size: xxx-large; align-self:center;">{{ title }}</h1>
+    </div>
+    <div class="row" style="height: 70vh;">
+
+        <div id="carouselExampleIndicators" class="carousel carousel-dark slide align-self-center" data-bs-ride="false" data-bs-interval="false">
+        <div class="carousel-indicators">
+            {% for m in stim %}
+                {% if loop.index0 == 0 %}
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                {% else %}
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="{{ loop.index0 }}" aria-label="Slide {{ loop.index0 + 1 }}"></button>
+                {% endif %}
+            {% endfor %}
+
+        </div>
+
+        <div class="carousel-inner">
+            {% for m in stim %}
+                {% if loop.index0 == 0 %}
+                    <div class="carousel-item active" style="font-family: monospace;">
+                    <div class="row justify-content-center" style="height: 75vh;">
+                        <div class="col-sm-9 text-center" id="slide_{{ loop.index }}" style="align-self: center;">
+                            <p style="font-size:calc(1rem + 1vw);">{{ m|string }}</p>
+                        <br><br>
+                        </div>
+                    </div>
+                </div>
+                {% else %}
+                <div class="carousel-item" style="font-family: monospace;">
+                    <div class="row justify-content-center" style="height: 75vh;">
+                        <div class="col-sm-9 text-center" id="slide_{{ loop.index }}" style="align-self: center;">
+                            <p style="font-size: calc(1rem + 1vw);">{{ m|safe }}</p>
+                        <br><br>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+            {% endfor %}
+
+            <script>
+                nxt = "{{ next }}"
+                $(".carousel-item p").eq(-1).append('<br><a href="#" type="button" id="start_bttn" class="btn btn-primary btn-lg" style="font-size: xx-large;" onclick="window.location.pathname=nxt">Next</a>')
+                $("#slide_2 p").after('<img src="../static/stim/win2.gif" style="height: 35vh;">')
+                $("#slide_3 p").after('<img src="../static/stim/demo.png" style="height: 35vh;">')
+            </script>
+
+
+
+
+        </div>
+
+        <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Previous</span>
+        </button>
+        <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+            <span class="visually-hidden">Next</span>
+        </button>
+    </div>
+
+    </div>
+
+{% endblock %}
+</html>

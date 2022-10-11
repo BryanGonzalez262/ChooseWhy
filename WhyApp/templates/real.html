@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+{% extends "base.html" %}
+
+<script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
+{% block js %}
+    <script>
+        var onloadCallback = function() {
+        grecaptcha.render('html_element', {
+          'sitekey' : "{{ sk }}"
+        });
+      };
+        function onClick(e) {
+        e.preventDefault();
+        grecaptcha.ready(function() {
+          grecaptcha.execute('reCAPTCHA_site_key', {action: 'submit'}).then(function(token) {
+              // submit to your backend server here.
+              $.ajax({
+                type: "POST",
+                url: window.location.pathname,
+                data: JSON.stringify({"subject_id": 'real'}),
+                traditional: true,
+                contentType: "application/json; charset=utf-8",
+                dataType: 'json',
+            });
+          });
+        });
+      }
+    </script>
+
+{% endblock %}
+
+{% block stage %}
+    <div class="row justify-content-center align-self-center">
+        <div class="col">
+            <p class="text-center" style="font-size: xxx-large;">{{ msg1 }}</p>
+        </div>
+    </div>
+    <div class="row">
+
+    </div>
+
+
+
+    <div class="row justify-content-center" id="realness">
+        <div class="col justify-content-center">
+            <form action="?" method="POST">
+                <div id="html_element"></div>
+                <br>
+                <input type="submit" value="Submit">
+            </form>
+            <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
+        </div>
+        <p>{{ message }}</p> <!-- Message to tell user whether or not they have filled out ReCaptcha -->
+    </div>
+
+
+
+
+{% endblock %}
+</html>
