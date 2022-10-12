@@ -71,7 +71,7 @@ def instructions():
         title = "Welcome"
         stym = [
             "In this study, you will be shown winning lottery outcomes and the conditions necessary for the win.",
-            "In each case, the winning outcome occured because a red ball was drawn from each of three jars, A, B & C.",
+            "In each case, the winning outcome occurs when a red ball is drawn from each of three jars, A, B & C.",
             "You will also be shown the chances of drawing a red ball from each individual jar.",
             "Your task is to use the sliders on the screen to indicate how much you think each jar was "
             "responsible for the final, winning, outcome.",
@@ -115,6 +115,11 @@ def trial():
             db.session.add(trl)
             db.session.commit()
         return make_response("200")
+
+@app.route('/debrief', methods=['GET', 'POST'])
+def debrief():
+    if request.method == "GET":
+        return render_template('debrief.html')
 
 
 @app.route('/acheck', methods=['GET', 'POST'])
