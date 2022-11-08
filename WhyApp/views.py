@@ -14,7 +14,6 @@ cap_secret = app.config["RECAPTCHA_SECRET_KEY"]
 exp_version = '1_conjunction'
 p = [.2, .4, .6, .8, 1]
 n_trials = 5
-check_trials = sorted(np.random.choice(range(n_trials), size=int(np.floor(n_trials/2))).tolist())
 
 
 @app.route('/why', methods=["GET"])
@@ -57,7 +56,7 @@ def consent():
         sdat = request.get_json()
         ss = Subject.query.filter_by(participant_id=sdat['subject_id'], recaptcha_complete=True,
                                      study_version=exp_version).first()
-        ss.ip_addy = "ZZ.ZZZ.Z.ZZZ"  # request.environ.get('HTTP_X_FORWARDED_FOR', request.remote_addr),
+        ss.ip_addy = request.environ.get('HTTP_X_FORWARDED_FOR', request.remote_addr)
         ss.consent = True
         ss.in_progress = True
         ss.start_time = datetime.datetime.now()
@@ -152,6 +151,12 @@ def trial():
 @app.route('/debrief', methods=['GET', 'POST'])
 def debrief():
     if request.method == "GET":
+        sdat = Subject.query.filter_by(participant_id=request.args.get("PID")).last()
+        sdat.complete = True
+        sdat.completion_time = datetime.datetime.now()
+        sdat.in_progress = False
+        db.session.add(sdat)
+        db.session.commit()
         return render_template('debrief.html')
 
 
