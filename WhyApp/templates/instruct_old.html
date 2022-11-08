@@ -2,9 +2,8 @@
 <html lang="en">
 {% extends "base.html" %}
 
-{% block stage %}
-    <script>$("#stage").css('align-content', 'center')</script>
 
+{% block stage %}
     <div class="row text-center" >
         <h1 class="animated bounceInUp" style="font-size: xxx-large; align-self:center;">{{ title }}</h1>
     </div>
@@ -47,12 +46,9 @@
 
             <script>
                 nxt = "{{ next }}"
-                $(".carousel-item p").eq(-1).append('<br><a href="#" type="button" id="start_bttn" class="btn btn-primary btn-lg" style="font-size: xx-large;" onclick="window.location.pathname=nxt">Continue</a>')
-                $("#slide_2 p").after('<img src="../static/stim/jars.png" style="height: 35vh;">')
-                $("#slide_4 p").after('<img src="../static/stim/example_wina.gif" style="height: 35vh;">')
-                $("#slide_5 p").after('<img src="../static/stim/example_losea.gif" style="height: 35vh;">')
-
-                $("#slide_6 p").after('<img src="../static/stim/demo.png" style="height: 35vh;">')
+                $(".carousel-item p").eq(-1).append('<br><a href="#" type="button" id="start_bttn" class="btn btn-primary btn-lg" style="font-size: xx-large;" onclick="window.location.pathname=nxt">Next</a>')
+                $("#slide_2 p").after('<img src="../static/stim/win2.gif" style="height: 35vh;">')
+                $("#slide_3 p").after('<img src="../static/stim/demo.png" style="height: 35vh;">')
             </script>
 
 

@@ -3,6 +3,7 @@
 {% extends "base.html" %}
 {% block js %}
     <script>
+
         document.body.addEventListener("keydown", function (event) {
             if (event.key === " ") {
                 window.location.pathname = "{{ next }}"
@@ -12,6 +13,8 @@
 {% endblock %}
 
 {% block stage %}
+    <script>    $("#stage").css('align-content', 'center')</script>
+
     <div class="row justify-content-center align-self-center">
         <div class="col-lg">
             <p class="text-center" style="font-size: xxx-large;">{{ msg1 }}</p>

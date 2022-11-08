@@ -20,7 +20,13 @@
                  traditional: true,
                  contentType: "application/json; charset=utf-8",
                  dataType: "json",
-                 success: function(){window.location.pathname = '/iti'; console.log('data sent from client')}
+                 success: function() {
+                     if ({{ tcheck }} === 1) {
+                         window.location.pathname = '/trial_chk'
+                     } else { window.location.pathname = '/iti';
+                         console.log('data sent from client')
+                     }
+                 }
         })
 
     }
@@ -43,7 +49,9 @@
     <div class="row justify-content-center">
         <div class="col-md-1">Progress:</div>
         <div class="col-md-1" style="text-align: right;">0</div>
-        <div class="col-md-7"><input type="range" value="{{ trl }}" min=0 max="{{ max_t|safe }}" style="width: -moz-available;" id="progress"></div>
+        <div class="col-md-7"><!-input type="range" value="{{ trl }}" min=0 max="{{ max_t|safe }}" style="width: -moz-available;" id="progress"-->
+            <progress id="file" max="{{ max_t|safe }}" value="{{ trl }}" style="width: -webkit-fill-available;"> 70% </progress>
+        </div>
 
         <div class="col-md-1">100%</div>
         <script>
@@ -52,34 +60,36 @@
                 polyfill: true,
                 onInit:function(){},
                 onSlide: function (){}
-            })
+            }).val({{ trl }})
         </script>
     </div>
     <br><br>
     <div class="row justify-content-between">
-        <div class="col-lg-2"><p style="font-size: xx-large;">Probabilities</p></div>
-        <div class="col-lg-2"><p style="font-size: xx-large;">Draw</p></div>
-        <div class="col-lg-7"><p style="font-size: xx-large;">Judgement</p></div>
+        <div class="col-lg-2 text-center"><p style="font-size: xx-large;">Probabilities</p></div>
+        <div class="col-lg-2 text-center"><p style="font-size: xx-large;">Draw</p></div>
+        <div class="col-lg-7 text-center"><p style="font-size: xx-large;">Judgement</p></div>
     </div>
 
 
     {% for rate in jars %}
         <div class="row justify-content-between" style="width: -moz-available;">
-            <div class="col-lg-2 animated bounceInLeft" >
+            <div class="col-lg-2 animated bounceInLeft text-center" >
                 <div class="row"><p style="font-size: larger; text-align: center;">Jar {{ rate }}</p></div>
-                <img src="../static/stim/t_{{ p[loop.index - 1]|safe }}.png" style="height: 17vh;">
+                <img src="../static/stim/p_{{ p[loop.index - 1]|safe }}.png" style="height: 17vh;">
             </div>
-            <div class="col-lg-2 outcome"  style="opacity: 0; align-self: end;">
-                <img src="../static/stim/winning{{ rate }}gif.gif" style="width: 11vw;">
+            <div class="col-lg-2 outcome text-center"  style="opacity: 0; align-self: end;">
+                <div class="row"><p style="font-size: larger; text-align: center;">Jar {{ rate }}</p></div>
+
+                <img src="../static/stim/draw_{{ p[loop.index - 1]|safe }}a.gif" style="width: 17vh;">
             </div>
             <div class="col-lg-7 judgement" style="opacity: 0;">
                 <div class="row">
                     <div class="row">
-                        <div class="col-sm-10 text-right"><p style="font-size: x-large">Drawing a red ball from Jar {{ rate|string }} caused the win.</p></div>
-                        <div class="col-sm-2" id="slide_val_{{ rate }}" style="text-align: left;"><h3></h3></div>
+                        <div class="col-sm-10 text-right"><p style="font-size: x-large">This player won the lottery because they drew a red ball from Jar {{ rate|string }}.</p></div>
+                        <div class="col-sm-2" id="slide_val_{{ rate }}" style="text-align: left; color: orange;"><h3></h3></div>
                     </div>
                     <div class="row align-items-center">
-                        <div class="col-lg-8" style="opacity: 1;">
+                        <div class="col-lg-10" style="opacity: 1;">
                             <div class="row align-items-center">
                                 <div class="col-sm-1"><p style="text-align: left; font-size: large;">0</p></div>
                                 <div class="col-sm-9"><input type="range" value="50" min=0 max=100" style="width: 26vw;" id="jar{{ rate }}"></div>

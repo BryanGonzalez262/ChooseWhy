@@ -10,22 +10,43 @@
         }
     }
 
+    function arraysEqual(a, b) {
+        if (a === b) return true;
+        if (a == null || b == null) return false;
+        if (a.length !== b.length) return false;
+
+        // If you don't care about the order of the elements inside
+        // the array, you should sort both arrays here.
+        // Please note that calling sort on an array will modify that array.
+        // you might want to clone your array first.
+
+        for (var i = 0; i < a.length; ++i) {
+            if (a.sort()[i] !== b[i]) return false;
+        }
+  return true;
+}
+
+
 
 
     function submitData(){
         //var draw = $("input:checked").each(function(){return this.id}).get()
         response['subject_id'] =  new URLSearchParams(window.location.search).get('PID')
-        //response['q1'] = String($("input:checked").each(function(){return this.id}).get())
+        response['q1'] = $('input[type="checkbox"]:checked').map(function() {return $(this).val();}).get().sort();
+
         response['q2'] = $("#jarinfo").val()
-        $.ajax({
+        if (arraysEqual(response['q1'], ['check2', 'check3', 'check5'])){
+            $.ajax({
                  type: "POST",
                  url:window.location.pathname,
                  data: JSON.stringify(response),
                  traditional: true,
                  contentType: "application/json; charset=utf-8",
                  dataType: "json",
-                 success: function(){window.location.pathname = '/debrief'; console.log('data sent from client')}
+                 success: function(){window.location.pathname='/begin'}
         })
+        }
+        else {window.location.pathname = '/oops'}
     }
 
     </script>
@@ -39,38 +60,38 @@
     </div>
     <div class="row">
         <div class="col">
-            <p class="text-center" style="font-size: x-large;">Select the draws necessary to win. </p>
+            <p class="text-center" style="font-size: x-large;">Select all the draws necessary to win. </p>
         </div>
         <div class="col">
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="check1" oninput="acheck();response['q1'].push(this.id)">
+                <input class="form-check-input" type="checkbox" value="check1" id="check1" oninput="acheck();">
                 <label class="form-check-label" for="flexCheckDefault">Blue ball from jar A</label>
             </div>
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="check2" oninput="acheck(); response['q1'].push(this.id)">
+                <input class="form-check-input" type="checkbox" value="check2" id="check2" oninput="acheck();">
                 <label class="form-check-label" for="flexCheckChecked">Red ball from jar A</label>
             </div>
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="check3" oninput="acheck();response['q1'].push(this.id)">
+                <input class="form-check-input" type="checkbox" value="check3" id="check3" oninput="acheck();">
                 <label class="form-check-label" for="flexCheckChecked">Red ball from jar B</label>
             </div>
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="check4" oninput="acheck();response['q1'].push(this.id)">
+                <input class="form-check-input" type="checkbox" value="check4" id="check4" oninput="acheck();">
                 <label class="form-check-label" for="flexCheckChecked">Blue ball from jar B</label>
             </div>
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="check5" oninput="acheck();response['q1'].push(this.id)">
+                <input class="form-check-input" type="checkbox" value="check5" id="check5" oninput="acheck();">
                 <label class="form-check-label" for="flexCheckChecked">Red ball from jar C</label>
             </div>
             <div class="form-check">
-                <input class="form-check-input" type="checkbox" value="" id="check6" oninput="acheck();response['q1'].push(this.id)">
+                <input class="form-check-input" type="checkbox" value="check6" id="check6" oninput="acheck();">
                 <label class="form-check-label" for="flexCheckChecked">Blue ball from jar C</label>
             </div>
         </div>
     </div>
     <div class="row">
         <div class="col">
-            <p class="text-center" style="font-size: x-large;">What information was shown about each jar?</p>
+            <p class="text-center" style="font-size: x-large;">What information is shown about each jar before a ball is drawn?</p>
         </div>
         <div class="col"><input id="jarinfo" style="width: 35vw;" oninput="acheck()"></div>
     </div>

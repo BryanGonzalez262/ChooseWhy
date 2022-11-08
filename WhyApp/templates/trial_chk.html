@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+{% extends "base.html" %}
+{% block js %}
+    <script>
+    var response = {}
+    function acheck(){
+        if ($("input:checked").each(function(){return this.id}).get().length !== 0){
+            $('#cont_butt').removeClass("disabled")
+        }
+    }
+
+
+
+
+
+
+    function submitData(){
+        if (response['q1'] === '{{ correct }}') {
+            $('#title p').text("Great!")
+            $('#question').html('<div class="col text-center"><p style="font-size: x-large;"> That was correct...</p></div>')
+            $('#cont_butt').css('opacity', 0)
+            var crrct = 1
+        } else {
+            $('#title p').text("Please pay closer attention")
+            $('#question').html('<div class="col text-center"><p style="font-size: x-large;">You answered the question incorrectly...</p></div>')
+            var crrct = 0
+            $('#cont_butt').css('opacity', 0)
+
+        }
+        $.ajax({
+                type: "POST",
+                url: window.location.pathname,
+                data: JSON.stringify({'pid': new URLSearchParams(window.location.search).get('PID'), 'trl': new URLSearchParams(window.location.search).get('TRL'),
+                    'jar': '{{ jar }}', 'response': response['q1'], 'correct': crrct}),
+                traditional: true,
+                contentType: "application/json; charset=utf-8",
+                dataType: "json",
+                success: function () {
+
+                    console.log('data sent from client')
+                }
+            })
+        setTimeout(function (){window.location.pathname='/nxt_trl'}, 3000)
+    }
+
+    </script>
+{% endblock %}
+
+{% block stage %}
+    <div class="row" >
+        <div class="col" id="title">
+            <p class="text-center" style="font-size: xx-large;">On the last trial.... </p>
+        </div>
+    </div>
+    <div class="row" id="question">
+        <div class="col">
+            <p class="text-center" style="font-size: x-large;">Which ball was more likely from jar {{ jar }}? </p>
+        </div>
+        <div class="col">
+            <div class="form-check-inline">
+                <input type="radio" class="btn-check" name="options" id="red" autocomplete="off" oninput="acheck();response['q1'] = this.id">
+                <label class="btn btn-secondary" for="red">Red</label>
+            </div>
+            <div class="form-check-inline">
+                <input type="radio" class="btn-check" name="options" id="blue" autocomplete="off" oninput="acheck();response['q1'] = this.id">
+                <label class="btn btn-secondary" for="blue">Blue</label>
+            </div>
+        </div>
+    </div>
+
+    <div class="row justify-content-center">
+            <div class="col-sm-2" id="continue">
+                <a href="#" type="button" id="cont_butt" class="btn btn-primary btn-lg disabled" style="font-size: large;" onclick="submitData()">Continue</a>
+            </div>
+    </div>
+
+{% endblock %}
+</html>

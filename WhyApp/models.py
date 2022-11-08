@@ -28,6 +28,8 @@ class Conjunctive(db.Model):
     c2_cause_rating = db.Column(db.VARCHAR(200))
     c3_cause_rating = db.Column(db.VARCHAR(200))
     trl_num = db.Column(db.Integer)
+    jar_checked = db.Column(db.VARCHAR(5))
+    check_correct = db.Column(db.Boolean)
     participant_id = db.Column(db.String, db.ForeignKey('subjects.participant_id'))
 
 
