@@ -25,7 +25,7 @@ def index():
         nxt = '/consent'
         return render_template('message.html', msg1=m1, msg2=m2, next=nxt)
     else:
-        return redirect(url_for('real'))
+        return redirect(url_for('real'), PROLIFIC_PID=request.args.get('PROLIFIC_PID'))
 
 
 @app.route('/real', methods=["GET", "POST"])
@@ -40,10 +40,12 @@ def real():
             pid = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits)
                           for _ in range(16))
             print(f'SUCCESS subject:  {pid}')
-            new_subject = Subject(participant_id=pid,  recaptcha_complete=True, study_version=exp_version)
+
+            new_subject = Subject(participant_id=pid, prolific_pid=request.get_json()['PROLIFIC_PID'],
+                                  recaptcha_complete=True, study_version=exp_version)
             db.session.add(new_subject)
             db.session.commit()
-            return redirect(url_for('consent', PID=pid, TRL=0))
+            return redirect(url_for('consent', PID=pid, PROLIFIC_PID=request.get_json()['PROLIFIC_PID'], TRL=0))
         else:
             return render_template('message.html', msg1="ERROR", msg2="YOU CANNOT ACCESS THIS", next='/real')
 
@@ -61,7 +63,7 @@ def consent():
             ss.consent = True
             ss.in_progress = True
             ss.start_time = datetime.datetime.now()
-            ss.prolific_id = sdat['prolific_id']
+            ss.prolific_pid = sdat['prolific_id']
             db.session.add(ss)
             db.session.commit()
         else:
