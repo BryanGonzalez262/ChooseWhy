@@ -150,6 +150,7 @@ def debrief():
         sdat.in_progress = False
         db.session.add(sdat)
         db.session.commit()
+        print('subject complete!')
         return render_template('debrief.html')
 
 
