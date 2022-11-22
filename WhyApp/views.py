@@ -13,7 +13,7 @@ cap_site_k = app.config["RECAPTCHA_SITE_KEY"]
 cap_secret = app.config["RECAPTCHA_SECRET_KEY"]
 exp_version = 'pure_conjunction'
 p = [.2, .4, .6, .8, 1]
-n_trials = 5
+n_trials = 10
 
 
 @app.route('/why', methods=["GET"])
@@ -55,7 +55,7 @@ def consent():
     if request.method == 'POST':
         sdat = request.get_json()
         ss = Subject.query.filter_by(participant_id=sdat['subject_id'], recaptcha_complete=True,
-                                     study_version=exp_version).first()
+                                     prolific_pid=sdat['prolific_id'], study_version=exp_version).first()
         if ss.recaptcha_complete == True:
             ss.ip_addy = request.environ.get('HTTP_X_FORWARDED_FOR', request.remote_addr)
             ss.consent = True

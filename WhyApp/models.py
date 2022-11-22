@@ -4,6 +4,7 @@ from . import db
 class Subject(db.Model):
     __tablename__ = 'subjects'
     participant_id = db.Column(db.String(64), unique=True, primary_key=True, index=True)
+    prolific_pid = db.Column(db.String(64), unique=True)
     recaptcha_complete = db.Column(db.Boolean)
     consent = db.Column(db.Boolean)
     ip_addy = db.Column(db.VARCHAR(200))

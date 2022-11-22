@@ -49,7 +49,9 @@
             $.ajax({
                 type: "POST",
                 url: window.location.pathname,
-                data: JSON.stringify({"subject_id":  new URLSearchParams(window.location.search).get('PID')}),
+                data: JSON.stringify({"subject_id":  new URLSearchParams(window.location.search).get('PID'),
+                    "prolific_id": new URLSearchParams(window.location.search).get('PROLIFIC_PID')
+                }),
                 traditional: true,
                 contentType: "application/json; charset=utf-8",
                 dataType: 'json',
