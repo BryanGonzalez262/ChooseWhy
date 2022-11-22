@@ -55,12 +55,13 @@ def consent():
     if request.method == 'POST':
         sdat = request.get_json()
         ss = Subject.query.filter_by(participant_id=sdat['subject_id'], recaptcha_complete=True,
-                                     prolific_pid=sdat['prolific_id'], study_version=exp_version).first()
+                                    study_version=exp_version).first()
         if ss.recaptcha_complete == True:
             ss.ip_addy = request.environ.get('HTTP_X_FORWARDED_FOR', request.remote_addr)
             ss.consent = True
             ss.in_progress = True
             ss.start_time = datetime.datetime.now()
+            ss.prolific_id = sdat['prolific_id']
             db.session.add(ss)
             db.session.commit()
         else:
@@ -145,7 +146,7 @@ def debrief():
     if request.method == "GET":
         sdat = Subject.query.filter_by(participant_id=request.args.get("PID")).first()
         sdat.complete = True
-        sdat.completion_time = datetime.datetime.now()
+        sdat.complete_time = datetime.datetime.now()
         sdat.in_progress = False
         db.session.add(sdat)
         db.session.commit()
