@@ -143,7 +143,7 @@ def trial():
 @app.route('/debrief', methods=['GET', 'POST'])
 def debrief():
     if request.method == "GET":
-        sdat = Subject.query.filter_by(participant_id=request.args.get("PID")).last()
+        sdat = Subject.query.filter_by(participant_id=request.args.get("PID")).first()
         sdat.complete = True
         sdat.completion_time = datetime.datetime.now()
         sdat.in_progress = False
