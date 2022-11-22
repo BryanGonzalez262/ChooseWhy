@@ -8,22 +8,23 @@
     <script>
         var onloadCallback = function() {
         grecaptcha.render('html_element', {
-          'sitekey' : "{{ sk }}"
+          'sitekey' : "{{ sk }}",
         });
       };
         function onClick(e) {
-        e.preventDefault();
-        grecaptcha.ready(function() {
-          grecaptcha.execute('reCAPTCHA_site_key', {action: 'submit'}).then(function(token) {
-              // submit to your backend server here.
-              $.ajax({
-                type: "POST",
-                url: window.location.pathname,
-                data: JSON.stringify({"PROLIFIC_PID": new URLSearchParams(window.location.search).get('PROLIFIC_PID')}),
-                traditional: true,
-                contentType: "application/json; charset=utf-8",
-                dataType: 'json',
-            });
+            e.preventDefault();
+            grecaptcha.ready(function() {
+                grecaptcha.execute('reCAPTCHA_site_key', {action: 'submit'}).then(function(token) {
+                  // submit to your backend server here.
+                  $.ajax({
+                    type: "POST",
+                    url: "/real",
+                    data: JSON.stringify({"PROLIFIC_PID": "{{ prolific_pid }}"}),
+                    traditional: true,
+                    contentType: "application/json; charset=utf-8",
+                    dataType: 'json',
+
+                });
           });
         });
       }

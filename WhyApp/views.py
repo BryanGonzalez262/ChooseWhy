@@ -1,7 +1,7 @@
 import datetime
 
 from . import app, db
-from flask import render_template, redirect, url_for, request, make_response
+from flask import render_template, redirect, url_for, request, make_response, session
 from .utils import check_client_net, instruction_text
 from .models import Subject, Conjunctive, Disjunctive
 import random, string, json, requests
@@ -25,13 +25,13 @@ def index():
         nxt = '/consent'
         return render_template('message.html', msg1=m1, msg2=m2, next=nxt)
     else:
-        return redirect(url_for('real', PROLIFIC_PID=request.args.get('PROLIFIC_PID')), )
+        return redirect(url_for('real'))
 
 
 @app.route('/real', methods=["GET", "POST"])
 def real():
     if request.method == "GET":
-        return render_template('real.html', msg1='Please verify', message=' ', nxt="/consent", sk=cap_site_k)
+        return render_template('real.html', msg1='Please verify', message=' ', nxt="/consent", sk=cap_site_k, prolific_pid=request.args.get('PROLIFIC_PID'))
     if request.method == "POST":
         r = requests.post('https://www.google.com/recaptcha/api/siteverify',
                           data={'secret': cap_secret, 'response': request.form['g-recaptcha-response']})
@@ -39,13 +39,13 @@ def real():
         if google_response['success']:
             pid = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits)
                           for _ in range(16))
-            print(f'SUCCESS subject:  {pid}')
 
-            new_subject = Subject(participant_id=pid, prolific_pid=request.get_json()['PROLIFIC_PID'],
+            new_subject = Subject(participant_id=pid,
                                   recaptcha_complete=True, study_version=exp_version)
             db.session.add(new_subject)
             db.session.commit()
-            return redirect(url_for('consent', PID=pid, PROLIFIC_PID=request.get_json()['PROLIFIC_PID'], TRL=0))
+            print(f'SUCCESS subject:  {pid}')
+            return redirect(url_for('getID', PID=pid, TRL=0))
         else:
             return render_template('message.html', msg1="ERROR", msg2="YOU CANNOT ACCESS THIS", next='/real')
 
@@ -58,19 +58,29 @@ def consent():
         sdat = request.get_json()
         ss = Subject.query.filter_by(participant_id=sdat['subject_id'], recaptcha_complete=True,
                                     study_version=exp_version).first()
-        if ss.recaptcha_complete == True:
-            ss.ip_addy = request.environ.get('HTTP_X_FORWARDED_FOR', request.remote_addr)
-            ss.consent = True
-            ss.in_progress = True
-            ss.start_time = datetime.datetime.now()
-            ss.prolific_pid = sdat['prolific_id']
-            db.session.add(ss)
-            db.session.commit()
-        else:
-            return render_template('message.html', msg1="ERROR", msg2="YOU CANNOT ACCESS THIS", next='/real')
+        ss.ip_addy = request.environ.get('HTTP_X_FORWARDED_FOR', request.remote_addr)
+        ss.consent = True
+        ss.in_progress = True
+        ss.start_time = datetime.datetime.now()
+        ss.prolific_pid = sdat['prolific_id']
+        db.session.add(ss)
+        db.session.commit()
 
         return make_response("200")
 
+
+@app.route('/getID', methods=['GET', 'POST'])
+def getID():
+    if request.method == 'GET':
+        return render_template('getID.html')
+    if request.method == 'POST':
+        sdat = request.get_json()
+        ss = Subject.query.filter_by(participant_id=sdat['participant_id']).first()
+        prolific = sdat['PROLIFIC_PID']
+        ss.prolific_pid = prolific.replace(" ", "").lower()
+        db.session.add(ss)
+        db.session.commit()
+        return make_response('200')
 
 @app.route('/instructions', methods=['GET', 'POST'])
 def instructions():
