@@ -25,7 +25,7 @@ def index():
         nxt = '/consent'
         return render_template('message.html', msg1=m1, msg2=m2, next=nxt)
     else:
-        return redirect(url_for('real'), PROLIFIC_PID=request.args.get('PROLIFIC_PID'))
+        return redirect(url_for('real', PROLIFIC_PID=request.args.get('PROLIFIC_PID')), )
 
 
 @app.route('/real', methods=["GET", "POST"])
