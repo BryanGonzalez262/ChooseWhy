@@ -126,8 +126,7 @@ def trial():
     if request.method == "GET":
         pC = [list(itertools.product(p, p, p))[x] for x in np.random.choice(len(p) ** 3, size=1, replace=False)]
         return render_template('trial1.html', jars=['A', 'B', 'C'], p=[int(x*100) for x in pC[0]],
-                               trl=int(request.args.get("TRL")), max_t=n_trials, tcheck=int(random.getrandbits(1))
-)
+                               trl=int(request.args.get("TRL")), max_t=n_trials, tcheck=int(1))
     if request.method == "POST":
         tdat = request.get_json()
         if 'conjunction' in exp_version:
