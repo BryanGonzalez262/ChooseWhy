@@ -2,7 +2,7 @@ import datetime
 
 from . import app, db
 from flask import render_template, redirect, url_for, request, make_response
-from .utils import check_client_net
+from .utils import check_client_net, instruction_text
 from .models import Subject, Conjunctive, Disjunctive
 import random, string, json, requests
 import itertools
@@ -11,7 +11,7 @@ import numpy as np
 # GLOBALS
 cap_site_k = app.config["RECAPTCHA_SITE_KEY"]
 cap_secret = app.config["RECAPTCHA_SECRET_KEY"]
-exp_version = '1_conjunction'
+exp_version = 'pure_conjunction'
 p = [.2, .4, .6, .8, 1]
 n_trials = 5
 
@@ -56,12 +56,16 @@ def consent():
         sdat = request.get_json()
         ss = Subject.query.filter_by(participant_id=sdat['subject_id'], recaptcha_complete=True,
                                      study_version=exp_version).first()
-        ss.ip_addy = request.environ.get('HTTP_X_FORWARDED_FOR', request.remote_addr)
-        ss.consent = True
-        ss.in_progress = True
-        ss.start_time = datetime.datetime.now()
-        db.session.add(ss)
-        db.session.commit()
+        if ss.recaptcha_complete == True:
+            ss.ip_addy = request.environ.get('HTTP_X_FORWARDED_FOR', request.remote_addr)
+            ss.consent = True
+            ss.in_progress = True
+            ss.start_time = datetime.datetime.now()
+            db.session.add(ss)
+            db.session.commit()
+        else:
+            return render_template('message.html', msg1="ERROR", msg2="YOU CANNOT ACCESS THIS", next='/real')
+
         return make_response("200")
 
 
@@ -69,19 +73,8 @@ def consent():
 def instructions():
     if request.method == 'GET':
         title = "Instructions"
-        stym = [
-            "In this study, you will be observe a series of different players' lottery outcomes.",
-            "The rules of the lottery are as follows: A player draws one ball from each of three different jars, A, B, & C.",
-            "In order to win the lottery, the player must draw three red balls - one from each of the three jars",
-            "Here, a player drew a red ball from jar A, B, & C; so they won the lottery.",
-            "Here, a player drew only two red balls, so they did not win the lottery.",
-            "Before observing a draw, you will also be shown the chances of the player drawing a red ball from each individual jar.",
-            "After observing the draw, your task is to use what you know about the lottery to indicate how much you think each jar was "
-            "responsible for the final outcome.",
-            "Occasionally, you will be asked about a specific jar you observed in the preceeding trial. Do your best to pay attention.",
-            "Let's make sure you understand these instructions"]
         next_pg = "/acheck"
-        return render_template('instruct.html', title=title, stim=stym, next=next_pg)
+        return render_template('instruct.html', title=title, stim=instruction_text[exp_version], next=next_pg)
 
 
 @app.route('/nxt_trl', methods=["GET"])
@@ -132,7 +125,7 @@ def iti():
 def trial():
     if request.method == "GET":
         pC = [list(itertools.product(p, p, p))[x] for x in np.random.choice(len(p) ** 3, size=1, replace=False)]
-        return render_template('trial.html', jars=['A', 'B', 'C'], p=[int(x*100) for x in pC[0]],
+        return render_template('trial1.html', jars=['A', 'B', 'C'], p=[int(x*100) for x in pC[0]],
                                trl=int(request.args.get("TRL")), max_t=n_trials, tcheck=int(random.getrandbits(1))
 )
     if request.method == "POST":
