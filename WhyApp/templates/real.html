@@ -6,12 +6,18 @@
 
 {% block js %}
     <script>
+        var verifyCallback = function(response) {//alert(response)
+            console.log(grecaptcha.getResponse())
+            }
+
         var onloadCallback = function() {
         grecaptcha.render('html_element', {
           'sitekey' : "{{ sk }}",
+            'callback': verifyCallback
         });
       };
-        function onClick(e) {
+        //$('form').onsubmit(window.location.pathname = '/consent.html')
+        /* function onClick(e) {
             e.preventDefault();
             grecaptcha.ready(function() {
                 grecaptcha.execute('reCAPTCHA_site_key', {action: 'submit'}).then(function(token) {
@@ -26,8 +32,8 @@
 
                 });
           });
-        });
-      }
+        });window.location.pathname = '/consent.html'
+      } */
     </script>
 
 {% endblock %}
@@ -38,9 +44,6 @@
             <p class="text-center" style="font-size: xxx-large;">{{ msg1 }}</p>
         </div>
     </div>
-    <div class="row">
-
-    </div>
 
 
 
@@ -50,7 +53,10 @@
                 <div id="html_element"></div>
                 <br>
                 <input type="submit" value="Submit">
+                <input type="text" value="{{ prolific_pid }}" name="PROLIFIC_PID" style="opacity: 0;">
+
             </form>
+
             <script src="https://www.google.com/recaptcha/api.js?onload=onloadCallback&render=explicit" async defer></script>
         </div>
         <p>{{ message }}</p> <!-- Message to tell user whether or not they have filled out ReCaptcha -->

@@ -25,7 +25,9 @@ def index():
         nxt = '/consent'
         return render_template('message.html', msg1=m1, msg2=m2, next=nxt)
     else:
-        return redirect(url_for('real'))
+        prolific = request.args.get('PROLIFIC_PID')
+        #prolific = 'bryan484ssp73p'
+        return redirect(url_for('real', PROLIFIC_PID=prolific))
 
 
 @app.route('/real', methods=["GET", "POST"])
@@ -40,12 +42,13 @@ def real():
             pid = ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits)
                           for _ in range(16))
 
-            new_subject = Subject(participant_id=pid,
+            new_subject = Subject(participant_id=pid, prolific_pid=request.form['PROLIFIC_PID'],
                                   recaptcha_complete=True, study_version=exp_version)
             db.session.add(new_subject)
             db.session.commit()
             print(f'SUCCESS subject:  {pid}')
-            return redirect(url_for('getID', PID=pid, TRL=0))
+            return redirect(url_for('consent', PID=pid, PROLIFIC_PID=request.form['PROLIFIC_PID'], TRL=0))
+
         else:
             return render_template('message.html', msg1="ERROR", msg2="YOU CANNOT ACCESS THIS", next='/real')
 
@@ -56,19 +59,18 @@ def consent():
         return render_template('consent.html')
     if request.method == 'POST':
         sdat = request.get_json()
-        ss = Subject.query.filter_by(participant_id=sdat['subject_id'], recaptcha_complete=True,
+        ss = Subject.query.filter_by(participant_id=sdat['subject_id'], prolific_pid= sdat['PROLIFIC_PID'], recaptcha_complete=True,
                                     study_version=exp_version).first()
         ss.ip_addy = request.environ.get('HTTP_X_FORWARDED_FOR', request.remote_addr)
         ss.consent = True
         ss.in_progress = True
         ss.start_time = datetime.datetime.now()
-        ss.prolific_pid = sdat['prolific_id']
         db.session.add(ss)
         db.session.commit()
 
         return make_response("200")
 
-
+'''
 @app.route('/getID', methods=['GET', 'POST'])
 def getID():
     if request.method == 'GET':
@@ -81,6 +83,8 @@ def getID():
         db.session.add(ss)
         db.session.commit()
         return make_response('200')
+'''
+
 
 @app.route('/instructions', methods=['GET', 'POST'])
 def instructions():

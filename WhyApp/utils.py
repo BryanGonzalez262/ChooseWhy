@@ -22,7 +22,7 @@ instruction_text = {
 # check VPN
 def check_client_net():
     api = app.config.get("NETWORK_CHECKER_KEY")
-    ip_addy = request.environ.get('HTTP_X_FORWARDED_FOR', request.remote_addr) #"73.143.122.22"
+    ip_addy = request.environ.get('HTTP_X_FORWARDED_FOR', request.remote_addr)
     response = requests.get("https://vpnapi.io/api/" + ip_addy + "?key=" + api)
     data = json.loads(response.text)
     if sum(data["security"].values()) > 0:
