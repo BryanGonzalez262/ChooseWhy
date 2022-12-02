@@ -26,7 +26,7 @@ def index():
         return render_template('message.html', msg1=m1, msg2=m2, next=nxt)
     else:
         prolific = request.args.get('PROLIFIC_PID')
-        #prolific = 'bryanfddgsafa484ssp73pds'
+        prolific = 'bryanfddfa484ssp73pds'
         return redirect(url_for('real', PROLIFIC_PID=prolific))
 
 
@@ -79,8 +79,8 @@ def instructions():
         title = "Instructions"
         next_pg = "/acheck"
         if exp_version == 'pure_disjunction':
-            im2 = 'static/stim/instructions/rrb.gif'
-            im3 = 'static/stim/instructions/bbb.gif'
+            im2 = '..static/stim/instructions/rrb.gif'
+            im3 = '..static/stim/instructions/bbb.gif'
 
         return render_template('instruct.html', title=title, stim=instruction_text[exp_version],
                                im2=im2, im3=im3, next=next_pg)
