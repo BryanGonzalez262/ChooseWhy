@@ -21,7 +21,7 @@
                  contentType: "application/json; charset=utf-8",
                  dataType: "json",
                  success: function() {
-                     if ({{ tcheck }} === 1) {
+                     if (Number({{ tcheck }}) === 1) {
                          window.location.pathname = '/trial_chk'
                      } else { window.location.pathname = '/iti';
                          console.log('data sent from client')
@@ -50,7 +50,7 @@
         <div class="col-md-1">Progress:</div>
         <div class="col-md-1" style="text-align: right;">0</div>
         <div class="col-md-7"><!-input type="range" value="{{ trl }}" min=0 max="{{ max_t|safe }}" style="width: -moz-available;" id="progress"-->
-            <progress id="file" max="{{ max_t|safe }}" value="{{ trl }}" style="width: -webkit-fill-available;"> 70% </progress>
+            <progress id="file" max="{{ max_t|safe }}" value="{{ trl }}" style="width: 100%;"> 70% </progress>
         </div>
 
         <div class="col-md-1">100%</div>
@@ -120,7 +120,7 @@
 
 
     {% endfor %}
-    <script>$('#jarRow_B #outcomepic').prepend('<img src="../static/stim/outcome.png" style="width: -webkit-fill-available;"/>')</script>
+    <script>$('#jarRow_B #outcomepic').prepend('<img src="../static/stim/outcome.png" style="width:25vw;"/>')</script>
     <div class="row justify-content-center" id="instr">
         <p style="text-align: center; font-size: large;">Press the space bar to continue</p>
     </div>

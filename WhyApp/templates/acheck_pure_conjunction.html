@@ -35,7 +35,7 @@
         response['q1'] = $('input[type="checkbox"]:checked').map(function() {return $(this).val();}).get().sort();
 
         response['q2'] = $("#jarinfo").val()
-        if (arraysEqual(response['q1'], ['check1', 'check2', 'check5'])){
+        if (arraysEqual(response['q1'], ['check2', 'check3', 'check5'])){
             $.ajax({
                  type: "POST",
                  url:window.location.pathname,
@@ -60,20 +60,20 @@
     </div>
     <div class="row">
         <div class="col">
-            <p class="text-center" style="font-size: x-large;">Select all the draws that lead to winning. </p>
+            <p class="text-center" style="font-size: x-large;">Select all the draws necessary to win. </p>
         </div>
         <div class="col">
             <div class="form-check">
                 <input class="form-check-input" type="checkbox" value="check1" id="check1" oninput="acheck();">
-                <label class="form-check-label" for="flexCheckDefault">Blue balls from jar A & B, and a red ball from jar C</label>
+                <label class="form-check-label" for="flexCheckDefault">Blue ball from jar A</label>
             </div>
             <div class="form-check">
                 <input class="form-check-input" type="checkbox" value="check2" id="check2" oninput="acheck();">
-                <label class="form-check-label" for="flexCheckChecked">Red ball from jar A and blue balls from jars B & C</label>
+                <label class="form-check-label" for="flexCheckChecked">Red ball from jar A</label>
             </div>
             <div class="form-check">
                 <input class="form-check-input" type="checkbox" value="check3" id="check3" oninput="acheck();">
-                <label class="form-check-label" for="flexCheckChecked">Blue ball from jar A, B, & C</label>
+                <label class="form-check-label" for="flexCheckChecked">Red ball from jar B</label>
             </div>
             <div class="form-check">
                 <input class="form-check-input" type="checkbox" value="check4" id="check4" oninput="acheck();">

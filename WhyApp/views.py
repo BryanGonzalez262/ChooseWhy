@@ -11,7 +11,7 @@ import numpy as np
 # GLOBALS
 cap_site_k = app.config["RECAPTCHA_SITE_KEY"]
 cap_secret = app.config["RECAPTCHA_SECRET_KEY"]
-exp_version = 'pure_conjunction'
+exp_version = 'pure_disjunction'
 p = [.2, .4, .6, .8, 1]
 n_trials = 10
 
@@ -26,7 +26,7 @@ def index():
         return render_template('message.html', msg1=m1, msg2=m2, next=nxt)
     else:
         prolific = request.args.get('PROLIFIC_PID')
-        #prolific = 'bryan484ssp73p'
+        #prolific = 'bryanfddgsafa484ssp73pds'
         return redirect(url_for('real', PROLIFIC_PID=prolific))
 
 
@@ -59,7 +59,7 @@ def consent():
         return render_template('consent.html')
     if request.method == 'POST':
         sdat = request.get_json()
-        ss = Subject.query.filter_by(participant_id=sdat['subject_id'], prolific_pid= sdat['PROLIFIC_PID'], recaptcha_complete=True,
+        ss = Subject.query.filter_by(participant_id=sdat['subject_id'], prolific_pid=sdat['PROLIFIC_PID'], recaptcha_complete=True,
                                     study_version=exp_version).first()
         ss.ip_addy = request.environ.get('HTTP_X_FORWARDED_FOR', request.remote_addr)
         ss.consent = True
@@ -70,20 +70,7 @@ def consent():
 
         return make_response("200")
 
-'''
-@app.route('/getID', methods=['GET', 'POST'])
-def getID():
-    if request.method == 'GET':
-        return render_template('getID.html')
-    if request.method == 'POST':
-        sdat = request.get_json()
-        ss = Subject.query.filter_by(participant_id=sdat['participant_id']).first()
-        prolific = sdat['PROLIFIC_PID']
-        ss.prolific_pid = prolific.replace(" ", "").lower()
-        db.session.add(ss)
-        db.session.commit()
-        return make_response('200')
-'''
+
 
 
 @app.route('/instructions', methods=['GET', 'POST'])
@@ -91,7 +78,12 @@ def instructions():
     if request.method == 'GET':
         title = "Instructions"
         next_pg = "/acheck"
-        return render_template('instruct.html', title=title, stim=instruction_text[exp_version], next=next_pg)
+        if exp_version == 'pure_disjunction':
+            im2 = 'static/stim/instructions/rrb.gif'
+            im3 = 'static/stim/instructions/bbb.gif'
+
+        return render_template('instruct.html', title=title, stim=instruction_text[exp_version],
+                               im2=im2, im3=im3, next=next_pg)
 
 
 @app.route('/nxt_trl', methods=["GET"])
@@ -146,15 +138,14 @@ def trial():
                                trl=int(request.args.get("TRL")), max_t=n_trials, tcheck=int(1))
     if request.method == "POST":
         tdat = request.get_json()
-        if 'conjunction' in exp_version:
-            trl = Conjunctive(p_c1=float(tdat['p_c1']/100), p_c2=float(tdat['p_c2']/100), p_c3=float(tdat['p_c3']/100),
-                              c1_cause_rating=str(tdat['q_1']),
-                              c2_cause_rating=str(tdat['q_2']),
-                              c3_cause_rating=str(tdat['q_3']),
-                              trl_num=int(tdat['trial']),
-                              participant_id=tdat['subject_id'])
-            db.session.add(trl)
-            db.session.commit()
+        trl = Conjunctive(p_c1=float(tdat['p_c1']/100), p_c2=float(tdat['p_c2']/100), p_c3=float(tdat['p_c3']/100),
+                          c1_cause_rating=str(tdat['q_1']),
+                          c2_cause_rating=str(tdat['q_2']),
+                          c3_cause_rating=str(tdat['q_3']),
+                          trl_num=int(tdat['trial']),
+                          participant_id=tdat['subject_id'])
+        db.session.add(trl)
+        db.session.commit()
         return make_response("200")
 
 @app.route('/debrief', methods=['GET', 'POST'])
@@ -177,7 +168,7 @@ def acheck():
     if request.method == 'POST':
         d = request.get_json()
         sdat = Subject.query.filter_by(participant_id=d['subject_id']).first()
-        if sorted(d['q1']) == ['check2', 'check3', 'check5']:
+        if sorted(d['q1']) == ['check1', 'check2', 'check5']:
             sdat.attn_chck = True
             sdat.attn_chck2 = d['q2']
             db.session.add(sdat)
