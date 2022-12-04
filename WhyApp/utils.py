@@ -25,14 +25,25 @@ instruction_text = {
                          "After observing the draw, your task is to use what you know about the lottery to indicate how much you think each jar was responsible for the final outcome.",
                          "After each trial, you will be asked about a specific jar you observed in the preceding trial. Do your best to pay attention",
                          "Let's make sure you understand these instructions"
-                         ]
+                         ],
+    'mixed_conjunction': [
+        "In this study, you will be observe a series of winning players' lottery outcomes.",
+        "The rules of the lottery are as follows: \n  A player draws one ball from each of three different jars, A, B, & C.",
+        "In order to win the lottery, the player must draw a red ball from Jar A, and must also draw at least one red ball from Jar B or Jar C. \n \n So if they draw one red ball from Jar A, and one or more red balls from Jar B and C, they will win.",
+        "Here, a player drew a red ball from jar A AND a red ball from jar B or C, so they won the lottery.",
+        "Here, a player drew a red ball from jar B or jar C, but did not draw a red ball from jar A so they lost the lottery.",
+        "After observing a lottery outcome, you will also be shown the chances of a player drawing a red ball from each individual jar.",
+        "After observing the draw, your task is to use what you know about the lottery to indicate how much you think each jar was responsible for the final outcome.",
+        "After each trial, you will be asked about a specific jar you observed in the preceding trial. Do your best to pay attention",
+        "Let's make sure you understand these instructions..."
+    ]
 }
 
 
 # check VPN
 def check_client_net():
     api = app.config.get("NETWORK_CHECKER_KEY")
-    ip_addy ="73.143.122.22" # request.environ.get('HTTP_X_FORWARDED_FOR', request.remote_addr) #
+    ip_addy =request.environ.get('HTTP_X_FORWARDED_FOR', request.remote_addr) # Ot5ptXoFYv1vrqkV
     response = requests.get("https://vpnapi.io/api/" + ip_addy + "?key=" + api)
     data = json.loads(response.text)
     if sum(data["security"].values()) > 0:

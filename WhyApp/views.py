@@ -11,7 +11,7 @@ import numpy as np
 # GLOBALS
 cap_site_k = app.config["RECAPTCHA_SITE_KEY"]
 cap_secret = app.config["RECAPTCHA_SECRET_KEY"]
-exp_version = 'pure_disjunction'
+exp_version = 'mixed_conjunction'
 p = [.2, .4, .6, .8, 1]
 n_trials = 10
 
@@ -26,7 +26,7 @@ def index():
         return render_template('message.html', msg1=m1, msg2=m2, next=nxt)
     else:
         prolific = request.args.get('PROLIFIC_PID')
-        prolific = 'bryanfddfa484ssp73pds'
+        #prolific = 'bryanfddfa484s3pds'+ ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(6))
         return redirect(url_for('real', PROLIFIC_PID=prolific))
 
 
@@ -79,9 +79,11 @@ def instructions():
         title = "Instructions"
         next_pg = "/acheck"
         if exp_version == 'pure_disjunction':
-            im2 = '..static/stim/instructions/rrb.gif'
-            im3 = '..static/stim/instructions/bbb.gif'
-
+            im2 = 'static/stim/instructions/rrb.gif'
+            im3 = 'static/stim/instructions/bbb.gif'
+        if exp_version == 'mixed_conjunction':
+            im2 = 'static/stim/instructions/rrb.gif'
+            im3 = 'static/stim/instructions/brb.gif'
         return render_template('instruct.html', title=title, stim=instruction_text[exp_version],
                                im2=im2, im3=im3, next=next_pg)
 
@@ -148,6 +150,7 @@ def trial():
         db.session.commit()
         return make_response("200")
 
+
 @app.route('/debrief', methods=['GET', 'POST'])
 def debrief():
     if request.method == "GET":
@@ -168,7 +171,7 @@ def acheck():
     if request.method == 'POST':
         d = request.get_json()
         sdat = Subject.query.filter_by(participant_id=d['subject_id']).first()
-        if sorted(d['q1']) == ['check1', 'check2', 'check5']:
+        if sorted(d['q1']) == ['check2', 'check4', 'check6']:
             sdat.attn_chck = True
             sdat.attn_chck2 = d['q2']
             db.session.add(sdat)

@@ -37,7 +37,8 @@
                 <div class="carousel-item" style="font-family: monospace;">
                     <div class="row justify-content-center" style="height: 75vh;">
                         <div class="col-sm-9 text-center" id="slide_{{ loop.index }}" style="align-self: center;">
-                            <p style="font-size: calc(1rem + 1vw);">{{ m|safe }}</p>
+
+                            <p style="font-size: calc(1rem + 1vw);">{% autoescape false %}{{ m | replace("\n", "<br/>") }}{% endautoescape %}</p>
                         <br><br>
                         </div>
                     </div>

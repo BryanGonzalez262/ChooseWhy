@@ -35,7 +35,7 @@
         response['q1'] = $('input[type="checkbox"]:checked').map(function() {return $(this).val();}).get().sort();
 
         response['q2'] = $("#jarinfo").val()
-        if (arraysEqual(response['q1'], ['check2', 'check4', 'check6'])){
+        if (arraysEqual(response['q1'], ['check1', 'check2', 'check5'])){
             $.ajax({
                  type: "POST",
                  url:window.location.pathname,
@@ -60,43 +60,38 @@
     </div>
     <div class="row">
         <div class="col">
-            <div class="row">
-                <p class="text-center" style="font-size: x-large;">Select all the draws that lead to winning. </p>
-            </div>
-            <div class="row justify-content-center">
-                <img src="../static/stim/instructions/mixed.png" width="30vw;">
-            </div>
+            <p class="text-center" style="font-size: x-large;">Select all the draws that lead to winning. </p>
         </div>
-        <div class="col" style="align-self: center;">
+        <div class="col">
             <div class="form-check">
                 <input class="form-check-input" type="checkbox" value="check1" id="check1" oninput="acheck();">
-                <label class="form-check-label" for="flexCheckDefault">jar A: Red , jar B: Blue , jar C: Blue</label>
+                <label class="form-check-label" for="flexCheckDefault">Blue balls from jar A & B, and a red ball from jar C</label>
             </div>
             <div class="form-check">
                 <input class="form-check-input" type="checkbox" value="check2" id="check2" oninput="acheck();">
-                <label class="form-check-label" for="flexCheckChecked">jar A: Red , jar B: Blue , jar C: Red</label>
+                <label class="form-check-label" for="flexCheckChecked">Red ball from jar A and blue balls from jars B & C</label>
             </div>
             <div class="form-check">
                 <input class="form-check-input" type="checkbox" value="check3" id="check3" oninput="acheck();">
-                <label class="form-check-label" for="flexCheckChecked">jar A: Blue , jar B: Blue , jar C: Blue</label>
+                <label class="form-check-label" for="flexCheckChecked">Blue ball from jar A, B, & C</label>
             </div>
             <div class="form-check">
                 <input class="form-check-input" type="checkbox" value="check4" id="check4" oninput="acheck();">
-                <label class="form-check-label" for="flexCheckChecked">jar A: Red , jar B: Red , jar C: Red</label>
+                <label class="form-check-label" for="flexCheckChecked">Blue ball from jar B</label>
             </div>
             <div class="form-check">
                 <input class="form-check-input" type="checkbox" value="check5" id="check5" oninput="acheck();">
-                <label class="form-check-label" for="flexCheckChecked">jar A: Blue , jar B: Blue , jar C: Blue</label>
+                <label class="form-check-label" for="flexCheckChecked">Red ball from jar C</label>
             </div>
             <div class="form-check">
                 <input class="form-check-input" type="checkbox" value="check6" id="check6" oninput="acheck();">
-                <label class="form-check-label" for="flexCheckChecked">jar A: Red , jar B: Red , jar C: Blue</label>
+                <label class="form-check-label" for="flexCheckChecked">Blue ball from jar C</label>
             </div>
         </div>
     </div>
     <div class="row">
         <div class="col">
-            <p class="text-center" style="font-size: x-large;">What information is shown about each jar?</p>
+            <p class="text-center" style="font-size: x-large;">What information is shown about each jar before a ball is drawn?</p>
         </div>
         <div class="col"><input id="jarinfo" style="width: 35vw;" oninput="acheck()"></div>
     </div>
