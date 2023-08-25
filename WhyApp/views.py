@@ -2,7 +2,7 @@ import datetime
 
 from . import app, db
 from flask import render_template, redirect, url_for, request, make_response, session
-from .utils import check_client_net, instruction_text
+from .utils import check_client_net, instruction_text, instruction_img
 from .models import Subject, Conjunctive, Disjunctive
 import random, string, json, requests
 import itertools
@@ -11,7 +11,7 @@ import numpy as np
 # GLOBALS
 cap_site_k = app.config["RECAPTCHA_SITE_KEY"]
 cap_secret = app.config["RECAPTCHA_SECRET_KEY"]
-exp_version = 'mixed_disjunction'
+exp_version = 'omission_conjunction'
 p = [.2, .4, .6, .8, 1]
 n_trials = 10
 
@@ -25,8 +25,8 @@ def index():
         nxt = '/consent'
         return render_template('message.html', msg1=m1, msg2=m2, next=nxt)
     else:
-        prolific = request.args.get('PROLIFIC_PID')
-        #prolific = 'bryan_'+ ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(6))
+        #prolific = request.args.get('PROLIFIC_PID')
+        prolific = 'bryan_'+ ''.join(random.choice(string.ascii_uppercase + string.ascii_lowercase + string.digits) for _ in range(6))
         return redirect(url_for('real', PROLIFIC_PID=prolific))
 
 
@@ -78,19 +78,11 @@ def instructions():
     if request.method == 'GET':
         title = "Instructions"
         next_pg = "/acheck"
-        if exp_version == 'pure_disjunction':
-            im2 = 'static/stim/instructions/rrb.gif'
-            im3 = 'static/stim/instructions/bbb.gif'
-            im4 = None
-        if exp_version == 'mixed_conjunction':
-            im2 = 'static/stim/instructions/rrb.gif'
-            im3 = 'static/stim/instructions/brb.gif'
-            im4 = None
-        if exp_version == 'mixed_disjunction':
-            im2 = 'static/stim/instructions/rrb.gif'
-            im3 = 'static/stim/instructions/brr.gif'
-            im4 = 'static/stim/instructions/brb.gif'
-        return render_template('instruct.html', title=title, stim=instruction_text[exp_version],
+        im1 = instruction_img[exp_version]['im1']
+        im2 = instruction_img[exp_version]['im2']
+        im3 = instruction_img[exp_version]['im3']
+        im4 = instruction_img[exp_version]['im4']
+        return render_template('instruct.html', title=title, stim=instruction_text[exp_version], im1=im1,
                                im2=im2, im3=im3, im4=im4, next=next_pg)
 
 
@@ -146,8 +138,8 @@ def reminder():
 @app.route('/trial', methods=["GET", "POST"])
 def trial():
     if request.method == "GET":
-        pC = [list(itertools.product(p, p, p))[x] for x in np.random.choice(len(p) ** 3, size=1, replace=False)]
-        return render_template('trial1.html', jars=['A', 'B', 'C'], p=[int(x*100) for x in pC[0]],
+        pC = [list(itertools.product(p, p))[x] for x in np.random.choice(len(p) ** 2, size=1, replace=False)]
+        return render_template('trial1.html', jars=['A', 'B'], p=[int(x*100) for x in pC[0]],
                                trl=int(request.args.get("TRL")), max_t=n_trials, tcheck=int(1))
     if request.method == "POST":
         tdat = request.get_json()
@@ -178,11 +170,12 @@ def debrief():
 @app.route('/acheck', methods=['GET', 'POST'])
 def acheck():
     if request.method == 'GET':
-        return render_template('acheck.html')
+        im5 = instruction_img[exp_version]['im5']
+        return render_template('acheck.html', im5=im5)
     if request.method == 'POST':
         d = request.get_json()
         sdat = Subject.query.filter_by(participant_id=d['subject_id']).first()
-        if sorted(d['q1']) == ['check1', 'check2', 'check4', 'check6']:
+        if sorted(d['q1']) == ['check2']:
             sdat.attn_chck = True
             sdat.attn_chck2 = d['q2']
             db.session.add(sdat)

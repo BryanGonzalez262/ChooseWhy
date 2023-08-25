@@ -49,7 +49,7 @@
             <script>
                 nxt = "{{ next }}"
                 $(".carousel-item p").eq(-1).append('<br><a href="#" type="button" id="start_bttn" class="btn btn-primary btn-lg" style="font-size: xx-large;" onclick="window.location.pathname=nxt">Continue</a>')
-                $("#slide_2 p").after('<img src="../static/stim/instructions/jars.png" style="height: 35vh;">')
+                $("#slide_2 p").after('<img src="{{ im1}}" style="height: 35vh;">')
                 $("#slide_4 p").after('<img src="{{ im2 }}" style="height: 35vh;">')
                 $("#slide_5 p").after('<img src="{{ im3 }}" style="height: 35vh;">')
                 $("#slide_6 p").after('<img src="{{ im4 }}" style="height: 35vh;">')

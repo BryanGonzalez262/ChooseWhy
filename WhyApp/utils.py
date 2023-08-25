@@ -49,13 +49,58 @@ instruction_text = {
         "After each trial, you will be asked about a specific jar you observed in the preceding trial. Do your best to pay attention",
         "Let's make sure you understand these instructions..."
     ],
+    'omission_conjunction': [
+        "In this study, you will be observe a series of winning players' lottery outcomes.",
+        "The rules of the lottery are as follows: \nA player draws one ball from each of two different jars, A & B.",
+        "In order to win the lottery, BOTH of the following must occur: \n - The player must NOT draw a red ball from jar A \n AND \n  - The player must draw a red ball from jar B",
+        "Here, a player did NOT draw a red ball from jar A, AND the player drew a red ball from jar B, so they won the lottery",
+        "Here, a player drew a red ball from jar B, but did not succeed in NOT drawing a red ball from jar A, so they did not win the lottery.",
+        "Here, a player <i>did</i> succeed in NOT drawing a red ball from jar A, but did not draw a red ball from jar B, so they did not win the lottery.",
+        "After observing a lottery outcome, you will also be shown the chances of a player drawing a red ball from each individual jar.",
+        "After observing the draw, your task is to use what you know about the lottery to indicate how much you think each jar was responsible for the final outcome.",
+        "After each trial, you will be asked about a specific jar you observed in the preceding trial. Do your best to pay attention",
+        "Let's make sure you understand these instructions..."
+    ]
 }
+
+
+instruction_img = {
+    'pure_disjunction': {
+        'im1': 'static/stim/instructions/jars.png',
+        'im2': 'static/stim/instructions/rrb.gif',
+        'im3': 'static/stim/instructions/bbb.gif',
+        'im4': None,
+        'im5': None
+    },
+    'mixed_conjunction': {
+        'im1': 'static/stim/instructions/jars.png',
+        'im2': 'static/stim/instructions/rrb.gif',
+        'im3': 'static/stim/instructions/brb.gif',
+        'im4': None,
+        'im5': 'static/stim/instructions/mix_conj.png'
+    },
+    'mixed_disjunction': {
+        'im1': 'static/stim/instructions/jars.png',
+        'im2': 'static/stim/instructions/rrb.gif',
+        'im3': 'static/stim/instructions/brr.gif',
+        'im4': 'static/stim/instructions/brb.gif',
+        'im5': 'static/stim/instructions/mix_disj.png'
+    },
+    'omission_conjunction': {
+        'im1': 'static/stim/instructions/jarsab.png',
+        'im2': 'static/stim/instructions/br.gif',
+        'im3': 'static/stim/instructions/rr.gif',
+        'im4': 'static/stim/instructions/bb.gif',
+        'im5': 'static/stim/instructions/omit_conj.png'
+    }
+}
+
 
 
 # check VPN
 def check_client_net():
     api = app.config.get("NETWORK_CHECKER_KEY")
-    ip_addy = request.environ.get('HTTP_X_FORWARDED_FOR', request.remote_addr)
+    ip_addy = "2603:7000:a000:1a58:6cba:3bf7:c12e:225d" #request.environ.get('HTTP_X_FORWARDED_FOR', request.remote_addr)
     response = requests.get("https://vpnapi.io/api/" + ip_addy + "?key=" + api)
     data = json.loads(response.text)
     if sum(data["security"].values()) > 0:
